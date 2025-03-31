@@ -1,0 +1,167 @@
+[
+    {
+        "id": "asst_QTIZPLkhcTTPfmG81gkw2dda",
+        "created_at": 1742895087,
+        "description": "Oversees financial planning and management.",
+        "instructions": "instructions.md",
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "name": "CEO",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "SendMessage",
+                    "description": "Correctly extracted `SendMessage` with all the required parameters with correct types",
+                    "parameters": {
+                        "$defs": {
+                            "recipient": {
+                                "enum": [
+                                    "Tracker"
+                                ],
+                                "title": "recipient",
+                                "type": "string"
+                            }
+                        },
+                        "properties": {
+                            "recipient": {
+                                "$ref": "#/$defs/recipient",
+                                "description": "Tracker: Manages financial records using an SQLite database.\n"
+                            },
+                            "my_primary_instructions": {
+                                "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
+                                "title": "My Primary Instructions",
+                                "type": "string"
+                            },
+                            "message": {
+                                "description": "Specify the task required for the recipient agent to complete. Focus on clarifying what the task entails, rather than providing exact instructions. Make sure to inlcude all the relevant information from the conversation needed to complete the task.",
+                                "title": "Message",
+                                "type": "string"
+                            },
+                            "message_files": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "A list of file IDs to be sent as attachments to this message. Only use this if you have the file ID that starts with 'file-'.",
+                                "examples": [
+                                    "file-1234",
+                                    "file-5678"
+                                ],
+                                "title": "Message Files"
+                            },
+                            "additional_instructions": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Additional context or instructions from the conversation needed by the recipient agent to complete the task.",
+                                "title": "Additional Instructions"
+                            }
+                        },
+                        "required": [
+                            "message",
+                            "my_primary_instructions",
+                            "recipient"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.5,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0,
+        "reasoning_effort": null
+    },
+    {
+        "id": "asst_dTgtewjEw6jjoKxrJGQCP7Kz",
+        "created_at": 1742895088,
+        "description": "Manages financial records using an SQLite database.",
+        "instructions": "instructions.md",
+        "metadata": {},
+        "model": "gpt-4o-2024-08-06",
+        "name": "Tracker",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "FinanceDBTool",
+                    "description": "A tool for interacting with an SQLite database to manage financial transactions.",
+                    "parameters": {
+                        "properties": {
+                            "action": {
+                                "description": "Action to perform: 'add', 'get_all', 'get_by_category', 'get_by_date', 'sum_by_category', 'update', 'delete'.",
+                                "title": "Action",
+                                "type": "string"
+                            },
+                            "date": {
+                                "default": null,
+                                "description": "Transaction date (YYYY-MM-DD). Required for 'add' and 'get_by_date'.",
+                                "title": "Date",
+                                "type": "string"
+                            },
+                            "category": {
+                                "default": null,
+                                "description": "Transaction category. Required for 'add' and 'get_by_category'.",
+                                "title": "Category",
+                                "type": "string"
+                            },
+                            "amount": {
+                                "default": null,
+                                "description": "Transaction amount. Required for 'add' and 'update'.",
+                                "title": "Amount",
+                                "type": "number"
+                            },
+                            "description": {
+                                "default": null,
+                                "description": "Description of the transaction. Optional for 'add' and 'update'.",
+                                "title": "Description",
+                                "type": "string"
+                            },
+                            "transaction_id": {
+                                "default": null,
+                                "description": "ID of the transaction. Required for 'update' and 'delete'.",
+                                "title": "Transaction Id",
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "action"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.2,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0,
+        "reasoning_effort": null
+    }
+]
